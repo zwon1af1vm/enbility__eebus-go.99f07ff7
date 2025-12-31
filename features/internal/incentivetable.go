@@ -31,7 +31,7 @@ func (i *IncentiveTableCommon) GetDescriptionsForFilter(
 ) ([]model.IncentiveTableDescriptionType, error) {
 	function := model.FunctionTypeIncentiveTableDescriptionData
 	data, err := featureDataCopyOfType[model.IncentiveTableDescriptionDataType](i.featureLocal, i.featureRemote, function)
-	if err != nil || data == nil {
+	if err != nil || data == nil || data.IncentiveTableDescription == nil {
 		return nil, api.ErrDataNotAvailable
 	}
 
@@ -40,9 +40,8 @@ func (i *IncentiveTableCommon) GetDescriptionsForFilter(
 		match := searchFilterInItem[model.TariffDescriptionDataType](*item.TariffDescription, filter)
 
 		if match {
-			continue
+			result = append(result, item)
 		}
-		result = append(result, item)
 	}
 
 	return result, nil
