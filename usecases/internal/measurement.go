@@ -24,7 +24,7 @@ func MeasurementPhaseSpecificDataForFilter(
 	}
 
 	data, err := measurement.GetDataForFilter(measurementFilter)
-	if err != nil && len(data) == 0 {
+	if err != nil || len(data) == 0 {
 		return nil, api.ErrDataNotAvailable
 	}
 
@@ -42,7 +42,7 @@ func MeasurementPhaseSpecificDataForFilter(
 			param, err := electricalConnection.GetParameterDescriptionsForFilter(filter)
 			if err != nil || len(param) == 0 ||
 				param[0].AcMeasuredPhases == nil ||
-				slices.Contains(validPhaseNameTypes, *param[0].AcMeasuredPhases) {
+				!slices.Contains(validPhaseNameTypes, *param[0].AcMeasuredPhases) {
 				continue
 			}
 		}
@@ -57,7 +57,7 @@ func MeasurementPhaseSpecificDataForFilter(
 			}
 
 			// if energy direction is not consume
-			if desc.PositiveEnergyDirection == nil || *desc.PositiveEnergyDirection == energyDirection {
+			if desc.PositiveEnergyDirection == nil || *desc.PositiveEnergyDirection != energyDirection {
 				return nil, err
 			}
 		}
