@@ -63,14 +63,14 @@ func (d *DeviceConfiguration) WriteKeyValues(data []model.DeviceConfigurationKey
 
 	// does the remote server feature not support partials?
 	operation := d.featureRemote.Operations()[model.FunctionTypeDeviceConfigurationKeyValueListData]
-	if operation != nil && !operation.WritePartial() {
+	if operation == nil || !operation.WritePartial() {
 		filters = nil
 		// we need to send all data
 		updateData := &model.DeviceConfigurationKeyValueListDataType{
 			DeviceConfigurationKeyValueData: data,
 		}
 
-		if mergedData, err := d.featureRemote.UpdateData(true, model.FunctionTypeDeviceConfigurationKeyValueListData, updateData, nil, nil); err == nil {
+		if mergedData, err := d.featureRemote.UpdateData(false, model.FunctionTypeDeviceConfigurationKeyValueListData, updateData, nil, nil); err == nil {
 			data = mergedData.([]model.DeviceConfigurationKeyValueDataType)
 		}
 	}
@@ -86,5 +86,5 @@ func (d *DeviceConfiguration) WriteKeyValues(data []model.DeviceConfigurationKey
 		cmd.Function = util.Ptr(model.FunctionTypeDeviceConfigurationKeyValueListData)
 	}
 
-	return d.remoteDevice.Sender().Write(d.featureRemote.Address(), d.featureLocal.Address(), cmd)
+	return d.remoteDevice.Sender().Write(d.featureLocal.Address(), d.featureRemote.Address(), cmd)
 }
