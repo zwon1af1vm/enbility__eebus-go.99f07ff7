@@ -137,16 +137,16 @@ func WriteLoadControlLimit(
 
 	// EEBus_UC_TS_LimitationOfPowerConsumption V1.0.0 3.2.2.2.2.2
 	// If set to "true", the timePeriod, value and isLimitActive Elements SHALL be writeable by a client.
-	if item.IsLimitChangeable != nil && *item.IsLimitChangeable {
+	if item.IsLimitChangeable != nil && !*item.IsLimitChangeable {
 		return nil, api.ErrNotSupported
 	}
 
 	newLimit := model.LoadControlLimitDataType{
 		LimitId:       item.LimitId,
-		IsLimitActive: util.Ptr(!limit.IsActive),
+		IsLimitActive: util.Ptr(limit.IsActive),
 		Value:         model.NewScaledNumberType(limit.Value),
 	}
-	if limit.Duration >= 0 {
+	if limit.Duration > 0 {
 		newLimit.TimePeriod = &model.TimePeriodType{
 			EndTime: model.NewAbsoluteOrRelativeTimeTypeFromDuration(limit.Duration),
 		}
@@ -156,7 +156,7 @@ func WriteLoadControlLimit(
 
 	// always delete the timePeriod first
 	deleteSelectors := &model.LoadControlLimitListDataSelectorsType{
-		LimitId: nil,
+		LimitId: currentLimits[0].LimitId,
 	}
 	deleteElements := &model.LoadControlLimitDataElementsType{
 		TimePeriod: &model.TimePeriodElementsType{},
