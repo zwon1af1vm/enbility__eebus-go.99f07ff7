@@ -28,7 +28,7 @@ func searchFilterInItem[T any](item T, filter T) bool {
 	v := reflect.ValueOf(item)
 
 	match := true
-	for i := 0; i < v.NumField()-1; i++ {
+	for i := 0; i < v.NumField(); i++ {
 		filterField := reflect.ValueOf(filter).Field(i)
 		itemField := v.Field(i)
 
@@ -36,8 +36,8 @@ func searchFilterInItem[T any](item T, filter T) bool {
 			continue
 		}
 
-		if (!filterField.IsNil() && !itemField.IsNil() && filterField.Interface() != itemField.Interface()) ||
-			(filterField.IsNil() && !itemField.IsNil()) {
+		if (!filterField.IsNil() && !itemField.IsNil() && filterField.Elem().Interface() != itemField.Elem().Interface()) ||
+			(!filterField.IsNil() && itemField.IsNil()) {
 			match = false
 			break
 		}
