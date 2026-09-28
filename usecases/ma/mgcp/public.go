@@ -19,11 +19,11 @@ import (
 //   - and others
 func (e *MGCP) PowerLimitationFactor(entity spineapi.EntityRemoteInterface) (float64, error) {
 	if !e.IsCompatibleEntityType(entity) {
-		return 0, api.ErrDataNotAvailable
+		return 0, api.ErrNoCompatibleEntity
 	}
 
 	measurement, err := client.NewMeasurement(e.LocalEntity, entity)
-	if err != nil && measurement == nil {
+	if err != nil || measurement == nil {
 		return 0, err
 	}
 
@@ -49,7 +49,7 @@ func (e *MGCP) PowerLimitationFactor(entity spineapi.EntityRemoteInterface) (flo
 		return 0, api.ErrDataNotAvailable
 	}
 
-	return data.Value.ScaledNumber.GetValue() * 100, nil
+	return data.Value.ScaledNumber.GetValue(), nil
 }
 
 // Scenario 2
