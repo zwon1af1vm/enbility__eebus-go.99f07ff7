@@ -28,17 +28,17 @@ func (e *CEVC) IncentiveConstraints(entity spineapi.EntityRemoteInterface) (ucap
 
 	constraints, err := evIncentiveTable.GetConstraints()
 	if err != nil {
-		return result, api.ErrDataNotAvailable
+		return result, err
 	}
 
 	// only use the first constraint
 	constraint := constraints[0]
 
 	if constraint.IncentiveSlotConstraints.SlotCountMin != nil {
-		result.MaxSlots = uint(*constraint.IncentiveSlotConstraints.SlotCountMin)
+		result.MinSlots = uint(*constraint.IncentiveSlotConstraints.SlotCountMin)
 	}
 	if constraint.IncentiveSlotConstraints.SlotCountMax != nil {
-		result.MinSlots = uint(*constraint.IncentiveSlotConstraints.SlotCountMax)
+		result.MaxSlots = uint(*constraint.IncentiveSlotConstraints.SlotCountMax)
 	}
 
 	return result, nil
