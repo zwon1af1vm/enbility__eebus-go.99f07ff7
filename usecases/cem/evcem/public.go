@@ -110,14 +110,14 @@ func (e *EVCEM) PowerPerPhase(entity spineapi.EntityRemoteInterface) ([]float64,
 		ScopeType:       util.Ptr(model.ScopeTypeTypeACPower),
 	}
 	data, err = evMeasurement.GetDataForFilter(filter)
-	if err != nil || len(data) == 0 {
+	// Elli Charger Connect/Pro (Gen1) returns power descriptions, but only measurements without actual values, see test case Test_EVPowerPerPhase_Current
+	if err != nil || len(data) == 0 || data[0].Value == nil {
 		return nil, api.ErrDataNotAvailable
 	}
 
 	var result []float64
 
-	for i := len(ucapi.PhaseNameMapping) - 1; i >= 0; i-- {
-		phase := ucapi.PhaseNameMapping[i]
+	for _, phase := range ucapi.PhaseNameMapping {
 		for _, item := range data {
 			if item.Value == nil {
 				continue
